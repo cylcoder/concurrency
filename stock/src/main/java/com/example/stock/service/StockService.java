@@ -8,7 +8,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional(readOnly = true)
 public class StockService {
 
   private final StockRepository stockRepository;
@@ -17,6 +16,7 @@ public class StockService {
   public void decreaseStock(Long id, Long quantity) {
     Stock stock = stockRepository.findById(id).orElseThrow();
     stock.decrease(quantity);
+    stockRepository.saveAndFlush(stock);
   }
 
 }
