@@ -3,6 +3,7 @@ package com.example.stock.service;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.stock.domain.Stock;
+import com.example.stock.facade.OptimisticLockStockFacade;
 import com.example.stock.repository.StockRepository;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -20,6 +21,9 @@ class StockServiceTest {
 
   @Autowired
   private PessimisticLockStockService pessimisticLockStockService;
+
+  @Autowired
+  private OptimisticLockStockFacade optimisticLockStockFacade;
 
   @Autowired
   private StockRepository stockRepository;
@@ -46,7 +50,10 @@ class StockServiceTest {
       executorService.submit(() -> {
         try {
 //          stockService.decreaseStock(1L, 1L);
-          pessimisticLockStockService.decreaseStock(1L, 1L);
+//          pessimisticLockStockService.decreaseStock(1L, 1L);
+          optimisticLockStockFacade.decreaseStock(1L, 1L);
+        } catch (InterruptedException e) {
+          throw new RuntimeException(e);
         } finally {
           countDownLatch.countDown();
         }
