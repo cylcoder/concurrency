@@ -4,6 +4,8 @@ import com.example.stock.domain.Stock;
 import com.example.stock.repository.StockRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +30,8 @@ public class StockService {
   * 서버가 2대 이상인 분산 환경에서는 JVM 메모리가 하나가 아니므로 서버 내부에서는 스레드들이 직렬화되지만 서버 간에는 통제가 되지 않음
   * */
 //  @Transactional
-  public synchronized void decreaseStock(Long id, Long quantity) {
+  @Transactional(propagation = Propagation.REQUIRES_NEW)
+  public void decreaseStock(Long id, Long quantity) {
     Stock stock = stockRepository.findById(id).orElseThrow();
     stock.decrease(quantity);
     stockRepository.saveAndFlush(stock);
