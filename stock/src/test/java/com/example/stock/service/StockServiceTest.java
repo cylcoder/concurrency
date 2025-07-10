@@ -19,6 +19,9 @@ class StockServiceTest {
   private StockService stockService;
 
   @Autowired
+  private PessimisticLockStockService pessimisticLockStockService;
+
+  @Autowired
   private StockRepository stockRepository;
 
   @BeforeEach
@@ -42,7 +45,8 @@ class StockServiceTest {
     for (int i = 0; i < threadCount; i++) {
       executorService.submit(() -> {
         try {
-          stockService.decreaseStock(1L, 1L);
+//          stockService.decreaseStock(1L, 1L);
+          pessimisticLockStockService.decreaseStock(1L, 1L);
         } finally {
           countDownLatch.countDown();
         }
@@ -52,7 +56,8 @@ class StockServiceTest {
     countDownLatch.await();
 
     Long remainingQuantity = stockRepository.findById(1L).orElseThrow().getQuantity();
-    assertThat(remainingQuantity).isNotZero();
+//    assertThat(remainingQuantity).isNotZero();
+    assertThat(remainingQuantity).isZero();
 
     /*
     * 1. 여러 쓰레드가 거의 동시에 findById(1L)을 호출 -> 같은 수량(100)을 가진 Stock 객체를 가져옴

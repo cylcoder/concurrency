@@ -22,6 +22,10 @@ public class StockService {
   * 7. 결과적으로 여러 트랜잭션이 동일한 오래된 값을 기반으로 UPDATE 쿼리를 날리고 최종적으로 가장 마지막에 커밋된 트랜잭션의 결과만 반영
   *
   * 쉽게 말해, A가 saveAndFlush 메서드를 호출한 뒤 커밋하기 전 시간동안 B가 findById를 하면 감소되기 전 재고를 읽는 문제 발생
+  *
+  * synchronized의 한계
+  * synchronized는 JVM 내부의 메모리에 있는 특정 객체에 락을 걸어 같은 JVM 내에서 여러 스레드가 동시에 한 메서드를 실행하는 것을 막음
+  * 서버가 2대 이상인 분산 환경에서는 JVM 메모리가 하나가 아니므로 서버 내부에서는 스레드들이 직렬화되지만 서버 간에는 통제가 되지 않음
   * */
 //  @Transactional
   public synchronized void decreaseStock(Long id, Long quantity) {
