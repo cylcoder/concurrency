@@ -2,6 +2,7 @@ package com.example.api.service;
 
 import com.example.api.domain.Coupon;
 import com.example.api.repository.CouponRepository;
+import com.example.api.repository.RedisCouponRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -10,10 +11,14 @@ import org.springframework.stereotype.Service;
 public class CouponService {
   
   private final CouponRepository couponRepository;
+  private final RedisCouponRepository redisCouponRepository;
 
   public void applyCoupon(Long userId) {
-    long count = couponRepository.count();
-    if (count < 100) {
+//    long count = couponRepository.count();
+
+    long count = redisCouponRepository.incrementCouponCount();
+
+    if (count <= 100) {
       couponRepository.save(new Coupon(userId));
     }
   }

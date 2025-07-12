@@ -1,7 +1,6 @@
 package com.example.api.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
 
 import com.example.api.repository.CouponRepository;
 import java.util.concurrent.CountDownLatch;
@@ -10,7 +9,6 @@ import java.util.concurrent.Executors;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.boot.test.context.SpringBootTest;
 
 @SpringBootTest
@@ -30,7 +28,7 @@ class CouponServiceTest {
   }
 
   @Test
-  @DisplayName("")
+  @DisplayName("여러명의 사용자가 쿠폰을 응모할 때 쿠폰이 100개만 발급된다.")
   void concurrentApply() throws InterruptedException {
     int threadCount = 1000;
     ExecutorService executorService = Executors.newFixedThreadPool(32);
